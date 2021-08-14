@@ -1,0 +1,11 @@
+.vs/
+packages/
+bin/
+obj/
+TestResults/
+/Help/
+/distribute/
+*~
+*.user
+*.userprefs
+*.suo
