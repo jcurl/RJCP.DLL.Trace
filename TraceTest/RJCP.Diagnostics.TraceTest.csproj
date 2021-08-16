@@ -36,9 +36,17 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+  <ItemGroup Condition="'$(TargetFrameworkIdentifer)' == '.NETFramework'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,8 +59,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="appsettings.json" />
+    <None Include="ILoggerUtils.cs" />
+    <None Include="LogSource_ILoggerTest.cs" />
+    <None Include="LogSource_TraceSourceTest.cs" />
+    <None Include="MemoryLoggerFactory.cs" />
+    <None Include="MemoryLogger.cs" />
     <Compile Include="LogSourceTest.cs" />
     <Compile Include="MemoryTraceListener.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Compile Include="LogSource_TraceSourceTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <Compile Include="ILoggerUtils.cs" />
+    <Compile Include="LogSource_ILoggerTest.cs" />
+    <Compile Include="MemoryLoggerFactory.cs" />
+    <Compile Include="MemoryLogger.cs" />
   </ItemGroup>
 
   <ItemGroup>

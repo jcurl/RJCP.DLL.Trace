@@ -5,97 +5,123 @@
     using NUnit.Framework;
 
     [TestFixture]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Structure", "NUnit1028:The non-test method is public", Justification = "False positive for internal")]
     public class LogSourceTest
     {
-        [Test]
-        [Platform(Include = "net")]  // .NET Core doesn't support TraceSource from config files
-        public void GetLogSource()
+        internal static MemoryTraceListener CheckLogSource(LogSource log)
         {
-            LogSource log = new LogSource("RJCP.TestSource");
-
-            MemoryTraceListener listener = CheckLogSource(log);
-            int count = listener.Logs.Count;   // A listener via the app.config has only one instance
-            log.TraceEvent(TraceEventType.Information, "Message");
-            log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
-
-            Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+            return CheckLogSource(log, SourceLevels.Information);
         }
 
-        private static MemoryTraceListener CheckLogSource(LogSource log)
+        internal static MemoryTraceListener CheckLogSource(LogSource log, SourceLevels expectedLevel)
         {
             Assert.That(log, Is.Not.Null);
             Assert.That(log.TraceSource, Is.Not.Null);
             Assert.That(log.TraceSource.Listeners.Count, Is.EqualTo(1));
             Assert.That(log.TraceSource.Listeners[0], Is.TypeOf<MemoryTraceListener>());
-            Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(SourceLevels.Information));
+            Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(expectedLevel));
             return (MemoryTraceListener)log.TraceSource.Listeners[0];
         }
 
         [Test]
-        [Platform(Include = "net")]  // .NET Core doesn't support TraceSource from config files
-        public void GetLogSourceDispose()
+        public void GetLogSourceNull()
         {
-            using (LogSource log = new LogSource("RJCP.TestSource")) {
-                MemoryTraceListener listener = CheckLogSource(log);
-                int count = listener.Logs.Count;   // A listener via the app.config has only one instance
-                log.TraceEvent(TraceEventType.Information, "Message");
-                log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
-
-                Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
-            }
-        }
-
-        [Test]
-        [Platform(Include = "net")]  // .NET Core doesn't support TraceSource from config files
-        public void GetLogSourceUseAfterDispose()
-        {
-            LogSource log = new LogSource("RJCP.TestSource");
-
-            MemoryTraceListener listener = CheckLogSource(log);
-            int count = listener.Logs.Count;   // A listener via the app.config has only one instance
-            log.TraceEvent(TraceEventType.Information, "Message");
-            log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
-
-            Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
-            log.Dispose();
-
             Assert.That(() => {
-                log.TraceEvent(TraceEventType.Information, "Log after Dispose");
-            }, Throws.TypeOf<ObjectDisposedException>());
+                _ = new LogSource(null);
+            }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        [Platform(Include = "net")]  // .NET Core doesn't support TraceSource from config files
-        public void GetLogSourceNewAfterDispose()
+        public void GetLogSourceEmptyName()
         {
-            LogSource log = new LogSource("RJCP.TestSource");
+            Assert.That(() => {
+                _ = new LogSource(string.Empty);
+            }, Throws.TypeOf<ArgumentException>());
+        }
 
-            MemoryTraceListener listener = CheckLogSource(log);
+        [TestCase(SourceLevels.Information)]
+        [TestCase(SourceLevels.Warning)]
+        public void SetLogSource_TraceSource(SourceLevels level)
+        {
+            TraceSource traceSource = new TraceSource("RJCP.TestTraceSource") {
+                Switch = new SourceSwitch("RJCP.TestTraceSource", level.ToString())
+            };
+            traceSource.Listeners.Clear();
+            traceSource.Listeners.Add(new MemoryTraceListener());
+            LogSource.SetLogSource(traceSource);
+
+            LogSource log = new LogSource("RJCP.TestTraceSource");
+            MemoryTraceListener listener = CheckLogSource(log, level);
+
+            Assert.That(log.ShouldTrace(TraceEventType.Error), Is.EqualTo(level >= SourceLevels.Error));
+            Assert.That(log.ShouldTrace(TraceEventType.Warning), Is.EqualTo(level >= SourceLevels.Warning));
+            Assert.That(log.ShouldTrace(TraceEventType.Information), Is.EqualTo(level >= SourceLevels.Information));
+            Assert.That(log.ShouldTrace(TraceEventType.Verbose), Is.EqualTo(level >= SourceLevels.Verbose));
+
             int count = listener.Logs.Count;   // A listener via the app.config has only one instance
             log.TraceEvent(TraceEventType.Information, "Message");
             log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
 
-            Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
-            log.Dispose();
+            if (level >= SourceLevels.Information)
+                Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+            else
+                Assert.That(listener.Logs.Count, Is.EqualTo(count));
+        }
 
-            LogSource log2 = new LogSource("RJCP.TestSource");
+        [TestCase(SourceLevels.Information)]
+        [TestCase(SourceLevels.Warning)]
+        public void SetLogSource_TraceListener(SourceLevels level)
+        {
+            LogSource.SetLogSource("RJCP.TestTraceListener", level, new MemoryTraceListener());
 
-            MemoryTraceListener listener2 = CheckLogSource(log2);
-            int count2 = listener2.Logs.Count;
-            log2.TraceEvent(TraceEventType.Information, "log2 message");
+            LogSource log = new LogSource("RJCP.TestTraceListener");
+            MemoryTraceListener listener = CheckLogSource(log, level);
 
-            Assert.That(listener2.Logs.Count, Is.EqualTo(count2 + 1));
+            Assert.That(log.ShouldTrace(TraceEventType.Error), Is.EqualTo(level >= SourceLevels.Error));
+            Assert.That(log.ShouldTrace(TraceEventType.Warning), Is.EqualTo(level >= SourceLevels.Warning));
+            Assert.That(log.ShouldTrace(TraceEventType.Information), Is.EqualTo(level >= SourceLevels.Information));
+            Assert.That(log.ShouldTrace(TraceEventType.Verbose), Is.EqualTo(level >= SourceLevels.Verbose));
+
+            int count = listener.Logs.Count;   // A listener via the app.config has only one instance
+            log.TraceEvent(TraceEventType.Information, "Message");
+            log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
+
+            if (level >= SourceLevels.Information)
+                Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+            else
+                Assert.That(listener.Logs.Count, Is.EqualTo(count));
         }
 
         [Test]
-        public void GetLogSourceNotDefined()
+        public void SetLogSource_NullTraceSource()
         {
-            LogSource log = new LogSource("RJCP.TestSourceNotDefind");
-            Assert.That(log, Is.Not.Null);
-            Assert.That(log.TraceSource, Is.Not.Null);
-            Assert.That(log.TraceSource.Listeners.Count, Is.EqualTo(1));
-            Assert.That(log.TraceSource.Listeners[0], Is.TypeOf<DefaultTraceListener>());
-            Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(SourceLevels.Off));
+            Assert.That(() => {
+                LogSource.SetLogSource(null);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void SetLogSource_NullName()
+        {
+            Assert.That(() => {
+                LogSource.SetLogSource(null, SourceLevels.Information, new MemoryTraceListener());
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void SetLogSource_EmptyName()
+        {
+            Assert.That(() => {
+                LogSource.SetLogSource(string.Empty, SourceLevels.Information, new MemoryTraceListener());
+            }, Throws.TypeOf<ArgumentException>());
+        }
+
+        [Test]
+        public void SetLogSource_NullListener()
+        {
+            Assert.That(() => {
+                LogSource.SetLogSource("RJCP.NullListener", SourceLevels.Information, null);
+            }, Throws.TypeOf<ArgumentNullException>());
         }
     }
 }

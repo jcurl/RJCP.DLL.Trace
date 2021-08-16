@@ -64,16 +64,7 @@
 
         public override void WriteLine(string message)
         {
-            LogEntry entry = new LogEntry() {
-                EventType = TraceEventType.Verbose,
-                Source = null,
-                Id = 0,
-                DateTime = DateTime.Now,
-                Message = message
-            };
-            lock (m_Lock) {
-                Logs.Add(entry);
-            }
+            Write(message);
         }
 
         public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id)
