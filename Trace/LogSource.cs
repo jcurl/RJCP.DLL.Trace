@@ -22,7 +22,7 @@ namespace RJCP.Diagnostics.Trace
     ///<![CDATA[
     ///private static LogSource log = new LogSource("MyTrace");
     ///if (log.ShouldTrace(TraceEventType.Information))
-    ///log.TraceSource.TraceEvent(TraceEventType.Information, id, $"Log Message: {errorCode}");
+    ///  log.TraceSource.TraceEvent(TraceEventType.Information, id, $"Log Message: {errorCode}");
     ///]]>
     /// </code>
     /// <para>

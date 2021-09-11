@@ -14,8 +14,6 @@
         [SetUp]
         public void TestSetup()
         {
-            Console.WriteLine("TestSetup");
-
             // We need to clear the factory before each test case, as it's static, and would otherwise cause sideeffects
             // between tests if they don't set it.
             LogSource.ClearLoggerFactory();
@@ -25,7 +23,7 @@
         [Test]
         public void SetLogSource_LoggerFactory()
         {
-            LogSource.SetLoggerFactory(ILoggerUtils.GetConsoleFactory());
+            LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory());
 
             LogSource log = new LogSource("RJCP.ILoggerTest1");
             log.TraceEvent(TraceEventType.Information, "Log Message");
@@ -37,7 +35,7 @@
         [Test]
         public void SetLogSource_LoggerFactory_GetTwice()
         {
-            LogSource.SetLoggerFactory(ILoggerUtils.GetConsoleFactory());
+            LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory());
 
             LogSource log = new LogSource("RJCP.ILoggerTest1");
             log.TraceEvent(TraceEventType.Information, "Log Message");
