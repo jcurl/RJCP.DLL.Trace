@@ -76,38 +76,32 @@
             switch (eventType) {
             case TraceEventType.Critical:
                 foreach (string line in m_Lines) {
-                    string fLine = string.Format("{0}: {1}", source, line);
-                    m_Logger.LogCritical(id, fLine);
+                    m_Logger.LogCritical(id, line);
                 }
                 break;
             case TraceEventType.Error:
                 foreach (string line in m_Lines) {
-                    string fLine = string.Format("{0}: {1}", source, line);
-                    m_Logger.LogError(id, fLine);
+                    m_Logger.LogError(id, line);
                 }
                 break;
             case TraceEventType.Warning:
                 foreach (string line in m_Lines) {
-                    string fLine = string.Format("{0}: {1}", source, line);
-                    m_Logger.LogWarning(id, fLine);
+                    m_Logger.LogWarning(id, line);
                 }
                 break;
             case TraceEventType.Information:
                 foreach (string line in m_Lines) {
-                    string fLine = string.Format("{0}: {1}", source, line);
-                    m_Logger.LogInformation(id, fLine);
+                    m_Logger.LogInformation(id, line);
                 }
                 break;
             case TraceEventType.Verbose:
                 foreach (string line in m_Lines) {
-                    string fLine = string.Format("{0}: {1}", source, line);
-                    m_Logger.LogDebug(id, fLine);
+                    m_Logger.LogDebug(id, line);
                 }
                 break;
             default:
                 foreach (string line in m_Lines) {
-                    string fLine = string.Format("{0}: {1}-{2}", source, eventType.ToString(), line);
-                    m_Logger.LogTrace(id, fLine);
+                    m_Logger.LogTrace(id, line);
                 }
                 break;
             }
