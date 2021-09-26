@@ -123,5 +123,14 @@
                 LogSource.SetLogSource("RJCP.NullListener", SourceLevels.Information, null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
+
+        [Test]
+        public void LogSourceDefault()
+        {
+            LogSource log = new LogSource();
+            Assert.That(log.TraceSource, Is.Not.Null);
+            Assert.That(log.TraceSource.Listeners.Count, Is.EqualTo(0));
+            Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(SourceLevels.Off));
+        }
     }
 }

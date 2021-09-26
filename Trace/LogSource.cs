@@ -219,6 +219,26 @@ namespace RJCP.Diagnostics.Trace
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="LogSource"/> class that doesn't log.
+        /// </summary>
+        /// <remarks>
+        /// Provides a constructor for a logger object that doesn't log. The implementation is not completely empty, a
+        /// <see cref="TraceSource"/> is still available but effectively logging is disabled. It is possible to
+        /// manipulate the <see cref="TraceSource"/> property to enable logging. The name of the trace source is
+        /// <c>default</c>.
+        /// </remarks>
+        public LogSource()
+        {
+            m_Name = string.Empty;
+            m_TraceSource = new TraceSource("default") {
+                Switch = new SourceSwitch("default") {
+                    Level = SourceLevels.Off
+                }
+            };
+            m_TraceSource.Listeners.Clear();
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogSource"/> class with the
         /// <see cref="System.Diagnostics.TraceSource"/> of the name provided.
         /// </summary>
