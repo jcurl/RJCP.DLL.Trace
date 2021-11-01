@@ -19,7 +19,7 @@
     <PackageId>RJCP.Diagnostics.Trace</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/jcurl</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.Trace</PackageProjectUrl>
 
     <Description>Support and extend Logging for .NET Framework and .NET Core.</Description>
     <Version>0.2.0</Version>
