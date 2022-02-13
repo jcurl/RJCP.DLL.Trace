@@ -41,7 +41,7 @@ logger.TraceEvent(TraceEventType.Information, "Log Message");
 
 ### .NET Framework Client
 
-There is nothing in particular tha tneeds to be done, other than to define the
+There is nothing in particular that needs to be done, other than to define the
 trace listener in the `app.config` file.
 
 ```xml
@@ -113,20 +113,19 @@ LogSource.SetLoggerFactory(GetConsoleFactory());
 
 ## Known Issues
 
-### Using ILogger with Unit Tests
+### Using ILogger with NUnit Tests
 
-I use NUnit for testing, and observed two faults:
+Using the .NET Core `ConsoleLogger` will not work in NUnit Test cases. Use my
+`RJCP.DLL.CodeQuality` library to get a `NUnitLogger`.
 
-* On the start of every test case, the `LogSource.LoggerFactory` must be set
-  before running the test case, even if it was set once prior. Debugging shows
-  that for some reason NUnit doesn't capture the output for any subsequent test,
-  only the first test. See [GitHub Issue #3919](https://github.com/nunit/nunit/issues/3919).
-* Depending on your logger that you use, it might not flush immediately. Using
-  the `ConsoleLoggingProvider` as in the example above, if the last operation of
-  a test case is to write a log, it occurs almost always that the log line will
-  not be captured by the test case. Add a slight delay (e.g. 10ms seems to be
-  enough most of the time) and the log is captured. The `ConsoleLogger` provided
-  by Microsoft queues to an internal memory structure and a separate thread is
-  responsible for then writing to the console (which will then be captured by
-  NUnit) later in time. I couldn't find a way to cause the console to flush. As
-  a workaround, you should provide your own test logger and log factory.
+The `ConsoleLogger` doesn't work in NUnit, as it creates a thread in the
+background that does the logging. This thread maintains a handle to the console,
+and is incompatible with the way that NUnit also tries to capture th console and
+redirect itself. That's why the workaround for console logging was to completely
+instantiate the factory on every test case, which is inefficient, but would
+reset the background thread allowing NUnit to capture the console again at the
+start of each test. But it still didn't solve the race conditions that might
+sometimes occur due to console logging actually being done in another thread,
+and so some console output might actually be captured for a different test case.
+
+See [GitHub Issue #3919](https://github.com/nunit/nunit/issues/3919).
