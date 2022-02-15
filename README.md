@@ -1,4 +1,4 @@
-# RJCP.Diagnostics.Trace
+# RJCP.Diagnostics.Trace <!-- omit in toc -->
 
 This assembly is to assist with logging be extending common operations on top of
 `System.Diagnostic`.
@@ -6,7 +6,26 @@ This assembly is to assist with logging be extending common operations on top of
 Projects using this library allow for easy compatibility between .NET Framework
 and .NET Core when porting, and allow easy reconfiguration of the trace sources.
 
-## .NET Framework works with .NET Core
+- [Motivation](#motivation)
+  - [Intended Use Cases](#intended-use-cases)
+  - [1. .NET Framework works with .NET Core](#1-net-framework-works-with-net-core)
+- [2. Examples of Usage](#2-examples-of-usage)
+  - [2.1. .NET Framework and .NET Core Code](#21-net-framework-and-net-core-code)
+  - [2.2. .NET Framework Client](#22-net-framework-client)
+  - [2.3. .NET Core Client](#23-net-core-client)
+    - [2.3.1. Reading from a Configuration File](#231-reading-from-a-configuration-file)
+- [3. Known Issues](#3-known-issues)
+  - [3.1. Using ILogger with NUnit Tests](#31-using-ilogger-with-nunit-tests)
+
+## Motivation
+
+### Intended Use Cases
+
+The software I develop is primarily console applications, windows forms
+applications, and reusable libraries. This library is intended primarily for
+these scenarios.
+
+### 1. .NET Framework works with .NET Core
 
 This library is intended for usage in your own .NET Framework and .NET Standard
 libraries.
@@ -28,9 +47,9 @@ Users of .NET Standard can then use the `LogSource.SetLoggerFactory` or
 user desired logging, resulting in common code for both frameworks, reducing
 fragmentation.
 
-## Examples of Usage
+## 2. Examples of Usage
 
-### .NET Framework and .NET Core Code
+### 2.1. .NET Framework and .NET Core Code
 
 Your code should get the `TraceListener` from the `LogSource`.
 
@@ -39,7 +58,7 @@ var logger = new LogSource("MyCategory");
 logger.TraceEvent(TraceEventType.Information, "Log Message");
 ```
 
-### .NET Framework Client
+### 2.2. .NET Framework Client
 
 There is nothing in particular that needs to be done, other than to define the
 trace listener in the `app.config` file.
@@ -63,7 +82,7 @@ trace listener in the `app.config` file.
 </configuration>
 ```
 
-### .NET Core Client
+### 2.3. .NET Core Client
 
 Because .NET Core doesn't read the configuration file, the `TraceListener` will
 only ever instantiate the `DefaultTraceListener` and logging won't work. We need
@@ -87,7 +106,7 @@ And then assign it:
 LogSource.SetLoggerFactory(GetConsoleFactory());
 ```
 
-#### Reading from a Configuration File
+#### 2.3.1. Reading from a Configuration File
 
 The previous section can be modified slightly to read from a configuration file:
 
@@ -103,6 +122,7 @@ internal static ILoggerFactory GetConsoleFactory()
             .AddConfiguration(config.GetSection("Logging"))
             .AddConsole();
     });
+}
 ```
 
 And then assign it:
@@ -111,9 +131,9 @@ And then assign it:
 LogSource.SetLoggerFactory(GetConsoleFactory());
 ```
 
-## Known Issues
+## 3. Known Issues
 
-### Using ILogger with NUnit Tests
+### 3.1. Using ILogger with NUnit Tests
 
 Using the .NET Core `ConsoleLogger` will not work in NUnit Test cases. Use my
 `RJCP.DLL.CodeQuality` library to get a `NUnitLogger`.
