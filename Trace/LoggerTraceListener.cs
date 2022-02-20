@@ -70,39 +70,26 @@
 
         public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string message)
         {
-            if (m_Lines.IsCached) m_Lines.NewLine();
-            m_Lines.AppendLine(message);
+            Flush();
 
             switch (eventType) {
             case TraceEventType.Critical:
-                foreach (string line in m_Lines) {
-                    m_Logger.LogCritical(id, line);
-                }
+                m_Logger.LogCritical(id, message);
                 break;
             case TraceEventType.Error:
-                foreach (string line in m_Lines) {
-                    m_Logger.LogError(id, line);
-                }
+                m_Logger.LogError(id, message);
                 break;
             case TraceEventType.Warning:
-                foreach (string line in m_Lines) {
-                    m_Logger.LogWarning(id, line);
-                }
+                m_Logger.LogWarning(id, message);
                 break;
             case TraceEventType.Information:
-                foreach (string line in m_Lines) {
-                    m_Logger.LogInformation(id, line);
-                }
+                m_Logger.LogInformation(id, message);
                 break;
             case TraceEventType.Verbose:
-                foreach (string line in m_Lines) {
-                    m_Logger.LogDebug(id, line);
-                }
+                m_Logger.LogDebug(id, message);
                 break;
             default:
-                foreach (string line in m_Lines) {
-                    m_Logger.LogTrace(id, line);
-                }
+                m_Logger.LogTrace(id, message);
                 break;
             }
         }
