@@ -139,16 +139,37 @@ namespace RJCP.Diagnostics.Trace
         /// The <see cref="ILoggerFactory"/> that can be used to create an <see cref="ILogger"/> for a given category.
         /// </param>
         /// <returns>
-        /// If the logger factory was already defined, returns <see langword="true"/> indicating it was overwritten, else
-        /// <see langword="false"/>.
+        /// If the logger factory was already defined, returns <see langword="true"/> indicating it was not overwritten,
+        /// else <see langword="false"/>.
         /// </returns>
         [CLSCompliant(false)]
         public static bool SetLoggerFactory(ILoggerFactory loggerFactory)
         {
+            return SetLoggerFactory(loggerFactory, false);
+        }
+
+        /// <summary>
+        /// Set a Logger Factory to initialize a TraceFactory for a given category.
+        /// </summary>
+        /// <param name="loggerFactory">
+        /// The <see cref="ILoggerFactory"/> that can be used to create an <see cref="ILogger"/> for a given category.
+        /// </param>
+        /// <param name="overrideFactory">
+        /// Set to <see langword="true"/> to override the factory if it is already set. If <see langword="false"/>, then
+        /// the existing factory is not overridden.
+        /// </param>
+        /// <returns>
+        /// If the logger factory was already defined, returns <see langword="true"/>. If
+        /// <paramref name="overrideFactory"/> is <see langword="true"/>, then it is overwritten. else
+        /// <see langword="false"/>.
+        /// </returns>
+        [CLSCompliant(false)]
+        public static bool SetLoggerFactory(ILoggerFactory loggerFactory, bool overrideFactory)
+        {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
             lock (TraceSourceLock) {
                 bool predefined = LoggerFactory != null;
-                LoggerFactory = loggerFactory;
+                if (!predefined || overrideFactory) LoggerFactory = loggerFactory;
                 return predefined;
             }
         }

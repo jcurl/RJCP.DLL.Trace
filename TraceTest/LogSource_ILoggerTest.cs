@@ -23,7 +23,7 @@
         [Test]
         public void SetLogSource_LoggerFactory()
         {
-            LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory());
+            Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory()), Is.False);
 
             LogSource log = new LogSource("RJCP.ILoggerTest1");
             log.TraceEvent(TraceEventType.Information, "Log Message");
@@ -35,7 +35,7 @@
         [Test]
         public void SetLogSource_LoggerFactory_GetTwice()
         {
-            LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory());
+            Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory()), Is.False);
 
             LogSource log = new LogSource("RJCP.ILoggerTest1");
             log.TraceEvent(TraceEventType.Information, "Log Message");
@@ -44,6 +44,19 @@
             LogSource log2 = new LogSource("RJCP.ILoggerTest1");
             log2.TraceEvent(TraceEventType.Information, "Log Message 2");
             Assert.That(log2.Logger, Is.Not.Null);
+        }
+
+        [Test]
+        public void SetLogSource_LoggerFactory_SetTwice()
+        {
+            Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory()), Is.False);
+            Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory2()), Is.True);
+
+            LogSource log = new LogSource("RJCP.ILoggerTest1");
+            log.TraceEvent(TraceEventType.Verbose, "Log Message");
+
+            Assert.That(log.Logger, Is.Not.Null);
+            Thread.Sleep(10);  // A log.Logger can't flush, and a ConsoleLogger needs time to write.
         }
 
         [Test]
@@ -82,7 +95,7 @@
         [Test]
         public void GetLogSource()
         {
-            LogSource.SetLoggerFactory(new MemoryLoggerFactory());
+            Assert.That(LogSource.SetLoggerFactory(new MemoryLoggerFactory()), Is.False);
             LogSource log = new LogSource("RJCP.MemoryLogger");
             Assert.That(log.Logger, Is.Not.Null);
 
@@ -96,7 +109,7 @@
         [Test]
         public void GetLogSourceDispose()
         {
-            LogSource.SetLoggerFactory(new MemoryLoggerFactory());
+            Assert.That(LogSource.SetLoggerFactory(new MemoryLoggerFactory()), Is.False);
             using (LogSource log = new LogSource("RJCP.MemoryLogger")) {
                 Assert.That(log.Logger, Is.Not.Null);
 
@@ -111,7 +124,7 @@
         [Test]
         public void GetLogSourceUseAfterDispose()
         {
-            LogSource.SetLoggerFactory(new MemoryLoggerFactory());
+            Assert.That(LogSource.SetLoggerFactory(new MemoryLoggerFactory()), Is.False);
             LogSource log = new LogSource("RJCP.MemoryLogger");
             Assert.That(log.Logger, Is.Not.Null);
 

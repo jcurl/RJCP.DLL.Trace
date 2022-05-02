@@ -14,6 +14,7 @@ and .NET Core when porting, and allow easy reconfiguration of the trace sources.
   - [2.2. .NET Framework Client](#22-net-framework-client)
   - [2.3. .NET Core Client](#23-net-core-client)
     - [2.3.1. Reading from a Configuration File](#231-reading-from-a-configuration-file)
+    - [2.3.2. Unit Testing with NUnit 3.x](#232-unit-testing-with-nunit-3x)
 - [3. Known Issues](#3-known-issues)
   - [3.1. Using ILogger with NUnit Tests](#31-using-ilogger-with-nunit-tests)
 
@@ -130,6 +131,53 @@ And then assign it:
 ```csharp
 LogSource.SetLoggerFactory(GetConsoleFactory());
 ```
+
+#### 2.3.2. Unit Testing with NUnit 3.x
+
+Your unit tests may want to provide its own logging levels independent of the
+object being tested. If your .NET core initializes and sets the factory similar
+to the previous section, all code will use that factory for logging.
+
+In .NET Core NUnit projects, you could define a file called
+`TestSetupFixture.cs` that is similar to:
+
+```csharp
+namespace App {
+  using Microsoft.Extensions.Logging;
+  using NUnit.Framework;
+  using RJCP.CodeQuality.NUnitExtensions.Trace;
+  using RJCP.Diagnostics.Trace;
+
+  [SetUpFixture]
+  public class TestSetupFixture {
+    [OneTimeSetUp]
+    public void GlobalSetup() {
+      GlobalLogger.Initialize();
+    }
+  }
+
+  internal static class GlobalLogger {
+    static GlobalLogger() {
+      ILoggerFactory factory = LoggerFactory.Create(builder => {
+        builder
+          .AddFilter("Microsoft", LogLevel.Warning)
+          .AddFilter("System", LogLevel.Warning)
+          .AddFilter("RJCP.Diagnostics.Log", LogLevel.Debug)
+          .AddNUnitLogger();
+        });
+        LogSource.SetLoggerFactory(factory);
+    }
+
+    // Just calling this method will result in the static constructor being executed.
+    public static void Initialize() {
+      /* Can be empty, reference will initialize static constructor */
+    }
+  }
+}
+```
+
+So long as `GlobalLogger.Initialize()` is called before the code being tested
+can initialize the `LogSource.SetLoggerFactory`, it will work.
 
 ## 3. Known Issues
 
