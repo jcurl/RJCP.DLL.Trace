@@ -13,7 +13,6 @@
 
         public List<string> Logs { get; private set; } = new List<string>();
 
-
         public IDisposable BeginScope<TState>(TState state)
         {
             return new SimpleDisposable();
