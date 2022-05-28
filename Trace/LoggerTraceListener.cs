@@ -1,4 +1,10 @@
-﻿namespace RJCP.Diagnostics.Trace
+﻿// According to https://github.com/dotnet/roslyn-analyzers/issues/5626, the main purpose for this diagnostic is: 'the
+// point of this analyzer is to determine whether the code is building a string to use in the logger.' We do but that is
+// because we're also a logger.
+
+#pragma warning disable CA2254 // Template should be a static expression.
+
+namespace RJCP.Diagnostics.Trace
 {
     using System.Diagnostics;
     using Internal;
