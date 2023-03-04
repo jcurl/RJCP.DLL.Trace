@@ -13,15 +13,13 @@
         {
             if (s_LoggerFactory == null) {
                 lock (s_LoggerFactoryLock) {
-                    if (s_LoggerFactory == null) {
-                        s_LoggerFactory = LoggerFactory.Create(builder => {
-                            builder
-                                .AddFilter("Microsoft", LogLevel.Warning)
-                                .AddFilter("System", LogLevel.Warning)
-                                .AddFilter("RJCP", LogLevel.Debug)
-                                .AddNUnitLogger();
-                        });
-                    }
+                    s_LoggerFactory ??= LoggerFactory.Create(builder => {
+                        builder
+                            .AddFilter("Microsoft", LogLevel.Warning)
+                            .AddFilter("System", LogLevel.Warning)
+                            .AddFilter("RJCP", LogLevel.Debug)
+                            .AddNUnitLogger();
+                    });
                 }
             }
             return s_LoggerFactory;
@@ -31,15 +29,13 @@
         {
             if (s_LoggerFactory2 == null) {
                 lock (s_LoggerFactoryLock) {
-                    if (s_LoggerFactory2 == null) {
-                        s_LoggerFactory2 = LoggerFactory.Create(builder => {
-                            builder
-                                .AddFilter("Microsoft", LogLevel.Warning)
-                                .AddFilter("System", LogLevel.Warning)
-                                .AddFilter("RJCP", LogLevel.Information)
-                                .AddNUnitLogger();
-                        });
-                    }
+                    s_LoggerFactory2 ??= LoggerFactory.Create(builder => {
+                        builder
+                            .AddFilter("Microsoft", LogLevel.Warning)
+                            .AddFilter("System", LogLevel.Warning)
+                            .AddFilter("RJCP", LogLevel.Information)
+                            .AddNUnitLogger();
+                    });
                 }
             }
             return s_LoggerFactory;
