@@ -88,7 +88,7 @@
             Assert.That(log, Is.Not.Null);
             Assert.That(log.Logger, Is.Null);
             Assert.That(log.TraceSource, Is.Not.Null);
-            Assert.That(log.TraceSource.Listeners.Count, Is.EqualTo(1));
+            Assert.That(log.TraceSource.Listeners, Has.Count.EqualTo(1));
             Assert.That(log.TraceSource.Listeners[0], Is.TypeOf<DefaultTraceListener>());
         }
 

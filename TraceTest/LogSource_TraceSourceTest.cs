@@ -20,7 +20,7 @@
             log.TraceEvent(TraceEventType.Information, "Message");
             log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
 
-            Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+            Assert.That(listener.Logs, Has.Count.EqualTo(count + 2));
         }
 
         [Test]
@@ -32,7 +32,7 @@
                 log.TraceEvent(TraceEventType.Information, "Message");
                 log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
 
-                Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+                Assert.That(listener.Logs, Has.Count.EqualTo(count + 2));
             }
         }
 
@@ -46,7 +46,7 @@
             log.TraceEvent(TraceEventType.Information, "Message");
             log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
 
-            Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+            Assert.That(listener.Logs, Has.Count.EqualTo(count + 2));
             log.Dispose();
 
             Assert.That(() => {
@@ -64,7 +64,7 @@
             log.TraceEvent(TraceEventType.Information, "Message");
             log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
 
-            Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+            Assert.That(listener.Logs, Has.Count.EqualTo(count + 2));
             log.Dispose();
 
             LogSource log2 = new LogSource("RJCP.TestSource");
@@ -73,7 +73,7 @@
             int count2 = listener2.Logs.Count;
             log2.TraceEvent(TraceEventType.Information, "log2 message");
 
-            Assert.That(listener2.Logs.Count, Is.EqualTo(count2 + 1));
+            Assert.That(listener2.Logs, Has.Count.EqualTo(count2 + 1));
         }
 
         [Test]
@@ -82,7 +82,7 @@
             LogSource log = new LogSource("RJCP.TestSourceNotDefind");
             Assert.That(log, Is.Not.Null);
             Assert.That(log.TraceSource, Is.Not.Null);
-            Assert.That(log.TraceSource.Listeners.Count, Is.EqualTo(1));
+            Assert.That(log.TraceSource.Listeners, Has.Count.EqualTo(1));
             Assert.That(log.TraceSource.Listeners[0], Is.TypeOf<DefaultTraceListener>());
             Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(SourceLevels.Off));
         }

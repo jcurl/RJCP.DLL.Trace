@@ -17,7 +17,7 @@
         {
             Assert.That(log, Is.Not.Null);
             Assert.That(log.TraceSource, Is.Not.Null);
-            Assert.That(log.TraceSource.Listeners.Count, Is.EqualTo(1));
+            Assert.That(log.TraceSource.Listeners, Has.Count.EqualTo(1));
             Assert.That(log.TraceSource.Listeners[0], Is.TypeOf<MemoryTraceListener>());
             Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(expectedLevel));
             return (MemoryTraceListener)log.TraceSource.Listeners[0];
@@ -63,9 +63,9 @@
             log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
 
             if (level >= SourceLevels.Information)
-                Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+                Assert.That(listener.Logs, Has.Count.EqualTo(count + 2));
             else
-                Assert.That(listener.Logs.Count, Is.EqualTo(count));
+                Assert.That(listener.Logs, Has.Count.EqualTo(count));
         }
 
         [TestCase(SourceLevels.Information)]
@@ -87,9 +87,9 @@
             log.TraceEvent(TraceEventType.Information, "Message {0}", 2);
 
             if (level >= SourceLevels.Information)
-                Assert.That(listener.Logs.Count, Is.EqualTo(count + 2));
+                Assert.That(listener.Logs, Has.Count.EqualTo(count + 2));
             else
-                Assert.That(listener.Logs.Count, Is.EqualTo(count));
+                Assert.That(listener.Logs, Has.Count.EqualTo(count));
         }
 
         [Test]
@@ -129,7 +129,7 @@
         {
             LogSource log = new LogSource();
             Assert.That(log.TraceSource, Is.Not.Null);
-            Assert.That(log.TraceSource.Listeners.Count, Is.EqualTo(0));
+            Assert.That(log.TraceSource.Listeners, Is.Empty);
             Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(SourceLevels.Off));
         }
     }
