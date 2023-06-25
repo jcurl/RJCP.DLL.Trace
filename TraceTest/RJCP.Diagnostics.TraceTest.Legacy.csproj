@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+  <!-- Implicit top import required explicitly to change build output path -->
+  <PropertyGroup>
+    <MSBuildProjectExtensionsPath>legacy</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectExtensionsPath)\obj</BaseIntermediateOutputPath>
+    <OutputPath Condition="'$(Configuration)' != ''">$(MSBuildProjectExtensionsPath)\bin\$(Configuration)</OutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>net48</TargetFramework>
     <OutputType>Library</OutputType>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
+    <DefineConstants>$(DefineConstants);NET40_LEGACY</DefineConstants>
 
-    <AssemblyName>RJCP.Diagnostics.TraceTest</AssemblyName>
+    <AssemblyName>RJCP.Diagnostics.TraceTest40</AssemblyName>
     <AssemblyTitle>RJCP.Diagnostics.TraceTest</AssemblyTitle>
     <Product>RJCP.Diagnostics.Trace</Product>
     <RootNamespace>RJCP.Diagnostics.Trace</RootNamespace>
@@ -55,34 +63,27 @@
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.16.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <ProjectReference Include="..\Trace\RJCP.Diagnostics.Trace.csproj" />
+    <ProjectReference Include="..\Trace\RJCP.Diagnostics.Trace.csproj">
+      <SetTargetFramework>TargetFramework=net40</SetTargetFramework>
+    </ProjectReference>
     <ProjectReference Include="..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="appsettings.json" />
-    <None Include="ILoggerUtils.cs" />
-    <None Include="LogSource_ILoggerTest.cs" />
-    <None Include="LogSource_TraceSourceTest.cs" />
-    <None Include="MemoryLoggerFactory.cs" />
-    <None Include="MemoryLogger.cs" />
+    <Compile Include="LogSource_TraceSourceTest.cs" />
     <Compile Include="LogSourceTest.cs" />
     <Compile Include="MemoryTraceListener.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <Compile Include="LogSource_TraceSourceTest.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCore'">
-    <Compile Include="ILoggerUtils.cs" />
-    <Compile Include="LogSource_ILoggerTest.cs" />
-    <Compile Include="MemoryLoggerFactory.cs" />
-    <Compile Include="MemoryLogger.cs" />
-  </ItemGroup>
-
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.Legacy.config" />
   </ItemGroup>
 
+  <Target Name="CopyAppConfig" AfterTargets="AfterBuild" Condition="Exists('$(ProjectDir)App.Legacy.config')">
+    <Delete Files="$(OutDir)$(TargetFileName).config" />
+    <Copy SourceFiles="$(ProjectDir)App.Legacy.config" DestinationFiles="$(OutDir)$(TargetFileName).config" />
+  </Target>
+
+  <!-- Implicit top import required explicitly to change build output path -->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
