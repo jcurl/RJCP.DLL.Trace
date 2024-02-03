@@ -4,7 +4,7 @@ namespace RJCP.Diagnostics.Trace
     using System.Collections.Generic;
     using System.Diagnostics;
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
     using Microsoft.Extensions.Logging;
 #endif
 
@@ -112,7 +112,7 @@ namespace RJCP.Diagnostics.Trace
             }
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         private static ILoggerFactory LoggerFactory;
         private static readonly Dictionary<string, ILogger> Loggers = new Dictionary<string, ILogger>();
 
@@ -233,7 +233,7 @@ namespace RJCP.Diagnostics.Trace
         {
             lock (TraceSourceLock) {
                 TraceSources.Clear();
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
                 Loggers.Clear();
 #endif
             }
@@ -280,7 +280,7 @@ namespace RJCP.Diagnostics.Trace
             }
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Create a
         /// </summary>
@@ -364,7 +364,7 @@ namespace RJCP.Diagnostics.Trace
             }
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// If there is an <see cref="ILogger"/> associated with this instance, get it.
         /// </summary>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Project>
   <!-- Implicit top import required explicitly to change build output path -->
   <PropertyGroup>
@@ -23,7 +22,7 @@
     <RootNamespace>RJCP.Diagnostics.Trace</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2024, Jason Curl</Copyright>
     <Company></Company>
     <Description>Test harness for RJCP.Diagnostics.Trace.</Description>
     <Version>1.0.0</Version>
@@ -35,12 +34,12 @@
     <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
   </PropertyGroup>
@@ -48,14 +47,6 @@
   <ItemGroup Condition="'$(TargetFrameworkIdentifer)' == '.NETFramework'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
