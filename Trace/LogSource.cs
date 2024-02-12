@@ -58,7 +58,7 @@ namespace RJCP.Diagnostics.Trace
         /// </remarks>
         public static bool SetLogSource(TraceSource source)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
+            ThrowHelper.ThrowIfNull(source);
 
             lock (TraceSourceLock) {
                 string name = source.Name;
@@ -90,9 +90,9 @@ namespace RJCP.Diagnostics.Trace
         /// </remarks>
         public static bool SetLogSource(string name, SourceLevels level, TraceListener listener)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Source name empty", nameof(name));
-            if (listener == null) throw new ArgumentNullException(nameof(listener));
+            ThrowHelper.ThrowIfNull(listener);
 
             TraceSource source = new TraceSource(name) {
                 Switch = new SourceSwitch(name) {
@@ -166,7 +166,7 @@ namespace RJCP.Diagnostics.Trace
         [CLSCompliant(false)]
         public static bool SetLoggerFactory(ILoggerFactory loggerFactory, bool overrideFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ThrowHelper.ThrowIfNull(loggerFactory);
             lock (TraceSourceLock) {
                 bool predefined = LoggerFactory != null;
                 if (!predefined || overrideFactory) LoggerFactory = loggerFactory;
@@ -188,9 +188,9 @@ namespace RJCP.Diagnostics.Trace
         [CLSCompliant(false)]
         public static bool SetLogSource(string name, ILogger logger)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Source name empty", nameof(name));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            ThrowHelper.ThrowIfNull(logger);
 
             TraceSource source = new TraceSource(name) {
                 Switch = new SourceSwitch(name) {
@@ -270,7 +270,7 @@ namespace RJCP.Diagnostics.Trace
         /// <exception cref="ArgumentException"><paramref name="name"/> may not be empty.</exception>
         public LogSource(string name)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name may not be empty", nameof(name));
 
             lock (TraceSourceLock) {
@@ -298,9 +298,9 @@ namespace RJCP.Diagnostics.Trace
         [CLSCompliant(false)]
         public LogSource(string name, ILogger logger)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Logger name is empty", nameof(name));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            ThrowHelper.ThrowIfNull(logger);
 
             m_TraceSource = CreateFromLogger(name, logger);
             Logger = logger;
