@@ -13,7 +13,7 @@
         [Test]
         public void GetLogSource()
         {
-            LogSource log = new LogSource("RJCP.TestSource");
+            LogSource log = new("RJCP.TestSource");
 
             MemoryTraceListener listener = LogSourceTest.CheckLogSource(log);
             int count = listener.Logs.Count;   // A listener via the app.config has only one instance
@@ -26,7 +26,7 @@
         [Test]
         public void GetLogSourceDispose()
         {
-            using (LogSource log = new LogSource("RJCP.TestSource")) {
+            using (LogSource log = new("RJCP.TestSource")) {
                 MemoryTraceListener listener = LogSourceTest.CheckLogSource(log);
                 int count = listener.Logs.Count;   // A listener via the app.config has only one instance
                 log.TraceEvent(TraceEventType.Information, "Message");
@@ -39,7 +39,7 @@
         [Test]
         public void GetLogSourceUseAfterDispose()
         {
-            LogSource log = new LogSource("RJCP.TestSource");
+            LogSource log = new("RJCP.TestSource");
 
             MemoryTraceListener listener = LogSourceTest.CheckLogSource(log);
             int count = listener.Logs.Count;   // A listener via the app.config has only one instance
@@ -57,7 +57,7 @@
         [Test]
         public void GetLogSourceNewAfterDispose()
         {
-            LogSource log = new LogSource("RJCP.TestSource");
+            LogSource log = new("RJCP.TestSource");
 
             MemoryTraceListener listener = LogSourceTest.CheckLogSource(log);
             int count = listener.Logs.Count;   // A listener via the app.config has only one instance
@@ -67,7 +67,7 @@
             Assert.That(listener.Logs, Has.Count.EqualTo(count + 2));
             log.Dispose();
 
-            LogSource log2 = new LogSource("RJCP.TestSource");
+            LogSource log2 = new("RJCP.TestSource");
 
             MemoryTraceListener listener2 = LogSourceTest.CheckLogSource(log2);
             int count2 = listener2.Logs.Count;
@@ -79,7 +79,7 @@
         [Test]
         public void GetLogSourceNotDefined()
         {
-            LogSource log = new LogSource("RJCP.TestSourceNotDefind");
+            LogSource log = new("RJCP.TestSourceNotDefind");
             Assert.That(log, Is.Not.Null);
             Assert.That(log.TraceSource, Is.Not.Null);
             Assert.That(log.TraceSource.Listeners, Has.Count.EqualTo(1));

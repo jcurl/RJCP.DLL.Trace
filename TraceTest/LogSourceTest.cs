@@ -43,14 +43,14 @@
         [TestCase(SourceLevels.Warning)]
         public void SetLogSource_TraceSource(SourceLevels level)
         {
-            TraceSource traceSource = new TraceSource("RJCP.TestTraceSource") {
+            TraceSource traceSource = new("RJCP.TestTraceSource") {
                 Switch = new SourceSwitch("RJCP.TestTraceSource", level.ToString())
             };
             traceSource.Listeners.Clear();
             traceSource.Listeners.Add(new MemoryTraceListener());
             LogSource.SetLogSource(traceSource);
 
-            LogSource log = new LogSource("RJCP.TestTraceSource");
+            LogSource log = new("RJCP.TestTraceSource");
             MemoryTraceListener listener = CheckLogSource(log, level);
 
             Assert.That(log.ShouldTrace(TraceEventType.Error), Is.EqualTo(level >= SourceLevels.Error));
@@ -74,7 +74,7 @@
         {
             LogSource.SetLogSource("RJCP.TestTraceListener", level, new MemoryTraceListener());
 
-            LogSource log = new LogSource("RJCP.TestTraceListener");
+            LogSource log = new("RJCP.TestTraceListener");
             MemoryTraceListener listener = CheckLogSource(log, level);
 
             Assert.That(log.ShouldTrace(TraceEventType.Error), Is.EqualTo(level >= SourceLevels.Error));
@@ -127,7 +127,7 @@
         [Test]
         public void LogSourceDefault()
         {
-            LogSource log = new LogSource();
+            LogSource log = new();
             Assert.That(log.TraceSource, Is.Not.Null);
             Assert.That(log.TraceSource.Listeners, Is.Empty);
             Assert.That(log.TraceSource.Switch.Level, Is.EqualTo(SourceLevels.Off));

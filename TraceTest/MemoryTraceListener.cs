@@ -19,14 +19,14 @@
             public string Message { get; set; }
         }
 
-        private readonly object m_Lock = new object();
+        private readonly object m_Lock = new();
 
         public List<LogEntry> Logs { get; private set; } = new List<LogEntry>();
 
         public override void Fail(string message, string detailMessage)
         {
             LogEntry entry;
-            if (detailMessage == null) {
+            if (detailMessage is null) {
                 entry = new LogEntry() {
                     EventType = TraceEventType.Warning,
                     Source = null,
@@ -50,7 +50,7 @@
 
         public override void Write(string message)
         {
-            LogEntry entry = new LogEntry() {
+            LogEntry entry = new() {
                 EventType = TraceEventType.Verbose,
                 Source = null,
                 Id = 0,
@@ -69,7 +69,7 @@
 
         public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id)
         {
-            LogEntry entry = new LogEntry() {
+            LogEntry entry = new() {
                 EventType = eventType,
                 Source = source,
                 Id = id,
@@ -83,7 +83,7 @@
 
         public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string message)
         {
-            LogEntry entry = new LogEntry() {
+            LogEntry entry = new() {
                 EventType = eventType,
                 Source = source,
                 Id = id,
@@ -97,7 +97,7 @@
 
         public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string format, params object[] args)
         {
-            LogEntry entry = new LogEntry() {
+            LogEntry entry = new() {
                 EventType = eventType,
                 Source = source,
                 Id = id,
@@ -111,12 +111,12 @@
 
         public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, object data)
         {
-            LogEntry entry = new LogEntry() {
+            LogEntry entry = new() {
                 EventType = eventType,
                 Source = source,
                 Id = id,
                 DateTime = DateTime.Now,
-                Message = data == null ? string.Empty : data.ToString()
+                Message = data is null ? string.Empty : data.ToString()
             };
             lock (m_Lock) {
                 Logs.Add(entry);
@@ -125,12 +125,12 @@
 
         public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, params object[] data)
         {
-            LogEntry entry = new LogEntry() {
+            LogEntry entry = new() {
                 EventType = eventType,
                 Source = source,
                 Id = id,
                 DateTime = DateTime.Now,
-                Message = data == null ? string.Empty : data.ToString()
+                Message = data is null ? string.Empty : data.ToString()
             };
             lock (m_Lock) {
                 Logs.Add(entry);

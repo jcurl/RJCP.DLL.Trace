@@ -37,8 +37,8 @@ namespace RJCP.Diagnostics.Trace
         private readonly long m_TraceLevels;
         private TraceSource m_TraceSource;
 
-        private static readonly object TraceSourceLock = new object();
-        private static readonly Dictionary<string, TraceSource> TraceSources = new Dictionary<string, TraceSource>();
+        private static readonly object TraceSourceLock = new();
+        private static readonly Dictionary<string, TraceSource> TraceSources = new();
 
         /// <summary>
         /// Sets the Log Source for a specific <paramref name="source"/>.
@@ -94,7 +94,7 @@ namespace RJCP.Diagnostics.Trace
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Source name empty", nameof(name));
             ThrowHelper.ThrowIfNull(listener);
 
-            TraceSource source = new TraceSource(name) {
+            TraceSource source = new(name) {
                 Switch = new SourceSwitch(name) {
                     Level = level
                 }
@@ -114,7 +114,7 @@ namespace RJCP.Diagnostics.Trace
 
 #if NET6_0_OR_GREATER
         private static ILoggerFactory LoggerFactory;
-        private static readonly Dictionary<string, ILogger> Loggers = new Dictionary<string, ILogger>();
+        private static readonly Dictionary<string, ILogger> Loggers = new();
 
         /// <summary>
         /// Remove a <see cref="ILoggerFactory"/> if set with <see cref="SetLoggerFactory(ILoggerFactory)"/>.
@@ -126,7 +126,7 @@ namespace RJCP.Diagnostics.Trace
         public static bool ClearLoggerFactory()
         {
             lock (TraceSourceLock) {
-                bool predefined = LoggerFactory != null;
+                bool predefined = LoggerFactory is not null;
                 LoggerFactory = null;
                 return predefined;
             }
@@ -168,7 +168,7 @@ namespace RJCP.Diagnostics.Trace
         {
             ThrowHelper.ThrowIfNull(loggerFactory);
             lock (TraceSourceLock) {
-                bool predefined = LoggerFactory != null;
+                bool predefined = LoggerFactory is not null;
                 if (!predefined || overrideFactory) LoggerFactory = loggerFactory;
                 return predefined;
             }
@@ -192,7 +192,7 @@ namespace RJCP.Diagnostics.Trace
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Source name empty", nameof(name));
             ThrowHelper.ThrowIfNull(logger);
 
-            TraceSource source = new TraceSource(name) {
+            TraceSource source = new(name) {
                 Switch = new SourceSwitch(name) {
                     Level = GetSourceLevels(logger)
                 }
@@ -214,7 +214,7 @@ namespace RJCP.Diagnostics.Trace
 
         private static SourceLevels GetSourceLevels(ILogger logger)
         {
-            if (logger == null) return SourceLevels.Off;
+            if (logger is null) return SourceLevels.Off;
 
             if (logger.IsEnabled(LogLevel.Trace)) return SourceLevels.All;
             if (logger.IsEnabled(LogLevel.Debug)) return SourceLevels.Verbose;
@@ -309,7 +309,7 @@ namespace RJCP.Diagnostics.Trace
 
         private static TraceSource CreateFromLogger(string name, ILogger logger)
         {
-            TraceSource source = new TraceSource(name) {
+            TraceSource source = new(name) {
                 Switch = new SourceSwitch(name) {
                     Level = GetSourceLevels(logger)
                 }
@@ -329,9 +329,9 @@ namespace RJCP.Diagnostics.Trace
             }
 #else
             if (!TraceSources.TryGetValue(name, out m_TraceSource)) {
-                if (LoggerFactory != null) {
+                if (LoggerFactory is not null) {
                     ILogger logger = LoggerFactory.CreateLogger(name);
-                    if (logger != null) {
+                    if (logger is not null) {
                         m_TraceSource = CreateFromLogger(name, logger);
                         Logger = logger;
                         Loggers.Add(name, logger);
@@ -359,7 +359,7 @@ namespace RJCP.Diagnostics.Trace
         {
             get
             {
-                if (m_TraceSource != null) return m_TraceSource;
+                if (m_TraceSource is not null) return m_TraceSource;
                 throw new ObjectDisposedException(m_Name);
             }
         }

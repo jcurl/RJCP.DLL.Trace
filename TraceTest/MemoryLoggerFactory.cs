@@ -2,7 +2,7 @@
 {
     using Microsoft.Extensions.Logging;
 
-    internal class MemoryLoggerFactory : ILoggerFactory
+    internal sealed class MemoryLoggerFactory : ILoggerFactory
     {
         public void AddProvider(ILoggerProvider provider)
         {

@@ -21,7 +21,7 @@ namespace RJCP.Diagnostics.Trace
     internal class LoggerTraceListener : TraceListener
     {
         private readonly ILogger m_Logger;
-        private readonly LineSplitter m_Lines = new LineSplitter();
+        private readonly LineSplitter m_Lines = new();
 
         public LoggerTraceListener(string name, ILogger logger) : base(name)
         {
@@ -35,7 +35,7 @@ namespace RJCP.Diagnostics.Trace
             if (m_Lines.IsCached) m_Lines.NewLine();
 
             string logMessage;
-            if (detailMessage == null) {
+            if (detailMessage is null) {
                 logMessage = message;
             } else {
                 logMessage = string.Format("{0}: {1}", message, detailMessage);

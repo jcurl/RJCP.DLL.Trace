@@ -25,7 +25,7 @@
         {
             Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory()), Is.False);
 
-            LogSource log = new LogSource("RJCP.ILoggerTest1");
+            LogSource log = new("RJCP.ILoggerTest1");
             log.TraceEvent(TraceEventType.Information, "Log Message");
 
             Assert.That(log.Logger, Is.Not.Null);
@@ -37,11 +37,11 @@
         {
             Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory()), Is.False);
 
-            LogSource log = new LogSource("RJCP.ILoggerTest1");
+            LogSource log = new("RJCP.ILoggerTest1");
             log.TraceEvent(TraceEventType.Information, "Log Message");
             Assert.That(log.Logger, Is.Not.Null);
 
-            LogSource log2 = new LogSource("RJCP.ILoggerTest1");
+            LogSource log2 = new("RJCP.ILoggerTest1");
             log2.TraceEvent(TraceEventType.Information, "Log Message 2");
             Assert.That(log2.Logger, Is.Not.Null);
         }
@@ -52,7 +52,7 @@
             Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory()), Is.False);
             Assert.That(LogSource.SetLoggerFactory(ILoggerUtils.GetLoggerFactory2()), Is.True);
 
-            LogSource log = new LogSource("RJCP.ILoggerTest1");
+            LogSource log = new("RJCP.ILoggerTest1");
             log.TraceEvent(TraceEventType.Verbose, "Log Message");
 
             Assert.That(log.Logger, Is.Not.Null);
@@ -72,7 +72,7 @@
         {
             LogSource.SetLogSource("RJCP.ILoggerSetTest", new MemoryLogger());
 
-            LogSource log = new LogSource("RJCP.ILoggerSetTest");
+            LogSource log = new("RJCP.ILoggerSetTest");
             Assert.That(log.Logger, Is.Not.Null);
 
             int count = ((MemoryLogger)log.Logger).Count;
@@ -84,7 +84,7 @@
         [Test]
         public void GetLogSource_DefaultListener()
         {
-            LogSource log = new LogSource("RJCP.DefaultLogger");
+            LogSource log = new("RJCP.DefaultLogger");
             Assert.That(log, Is.Not.Null);
             Assert.That(log.Logger, Is.Null);
             Assert.That(log.TraceSource, Is.Not.Null);
@@ -96,7 +96,7 @@
         public void GetLogSource()
         {
             Assert.That(LogSource.SetLoggerFactory(new MemoryLoggerFactory()), Is.False);
-            LogSource log = new LogSource("RJCP.MemoryLogger");
+            LogSource log = new("RJCP.MemoryLogger");
             Assert.That(log.Logger, Is.Not.Null);
 
             int count = ((MemoryLogger)log.Logger).Count;
@@ -110,7 +110,7 @@
         public void GetLogSourceDispose()
         {
             Assert.That(LogSource.SetLoggerFactory(new MemoryLoggerFactory()), Is.False);
-            using (LogSource log = new LogSource("RJCP.MemoryLogger")) {
+            using (LogSource log = new("RJCP.MemoryLogger")) {
                 Assert.That(log.Logger, Is.Not.Null);
 
                 int count = ((MemoryLogger)log.Logger).Count;
@@ -125,7 +125,7 @@
         public void GetLogSourceUseAfterDispose()
         {
             Assert.That(LogSource.SetLoggerFactory(new MemoryLoggerFactory()), Is.False);
-            LogSource log = new LogSource("RJCP.MemoryLogger");
+            LogSource log = new("RJCP.MemoryLogger");
             Assert.That(log.Logger, Is.Not.Null);
 
             int count = ((MemoryLogger)log.Logger).Count;
@@ -144,7 +144,7 @@
         public void GetLogSourceDependencyInjection()
         {
             ILogger logger = new MemoryLogger();
-            LogSource log = new LogSource("RJCP.MemoryLoggerDI", logger);
+            LogSource log = new("RJCP.MemoryLoggerDI", logger);
             Assert.That(log.Logger, Is.Not.Null);
 
             Assert.That(((MemoryLogger)log.Logger).Count, Is.EqualTo(0));

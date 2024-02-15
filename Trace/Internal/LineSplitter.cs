@@ -6,8 +6,8 @@
 
     internal sealed class LineSplitter : IEnumerable<string>
     {
-        private readonly StringBuilder m_Line = new StringBuilder();
-        private List<string> m_Lines = new List<string>();
+        private readonly StringBuilder m_Line = new();
+        private List<string> m_Lines = new();
 
         public bool IsCached { get { return m_Line.Length > 0; } }
 
