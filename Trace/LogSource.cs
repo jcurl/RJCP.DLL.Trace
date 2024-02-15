@@ -90,8 +90,7 @@ namespace RJCP.Diagnostics.Trace
         /// </remarks>
         public static bool SetLogSource(string name, SourceLevels level, TraceListener listener)
         {
-            ThrowHelper.ThrowIfNull(name);
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Source name empty", nameof(name));
+            ThrowHelper.ThrowIfNullOrEmpty(name);
             ThrowHelper.ThrowIfNull(listener);
 
             TraceSource source = new(name) {
@@ -188,8 +187,7 @@ namespace RJCP.Diagnostics.Trace
         [CLSCompliant(false)]
         public static bool SetLogSource(string name, ILogger logger)
         {
-            ThrowHelper.ThrowIfNull(name);
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Source name empty", nameof(name));
+            ThrowHelper.ThrowIfNullOrEmpty(name);
             ThrowHelper.ThrowIfNull(logger);
 
             TraceSource source = new(name) {
@@ -270,8 +268,7 @@ namespace RJCP.Diagnostics.Trace
         /// <exception cref="ArgumentException"><paramref name="name"/> may not be empty.</exception>
         public LogSource(string name)
         {
-            ThrowHelper.ThrowIfNull(name);
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name may not be empty", nameof(name));
+            ThrowHelper.ThrowIfNullOrEmpty(name);
 
             lock (TraceSourceLock) {
                 m_Name = name;
@@ -298,8 +295,7 @@ namespace RJCP.Diagnostics.Trace
         [CLSCompliant(false)]
         public LogSource(string name, ILogger logger)
         {
-            ThrowHelper.ThrowIfNull(name);
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Logger name is empty", nameof(name));
+            ThrowHelper.ThrowIfNullOrEmpty(name);
             ThrowHelper.ThrowIfNull(logger);
 
             m_TraceSource = CreateFromLogger(name, logger);
