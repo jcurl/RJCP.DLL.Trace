@@ -6,9 +6,9 @@ This assembly is to assist with logging be extending common operations on top of
 Projects using this library allow for easy compatibility between .NET Framework
 and .NET Core when porting, and allow easy reconfiguration of the trace sources.
 
-- [Motivation](#motivation)
-  - [Intended Use Cases](#intended-use-cases)
-  - [1. .NET Framework works with .NET Core](#1-net-framework-works-with-net-core)
+- [1. Motivation](#1-motivation)
+  - [1.1. Intended Use Cases](#11-intended-use-cases)
+  - [1.2. .NET Framework works with .NET Core](#12-net-framework-works-with-net-core)
 - [2. Examples of Usage](#2-examples-of-usage)
   - [2.1. .NET Framework and .NET Core Code](#21-net-framework-and-net-core-code)
   - [2.2. .NET Framework Client](#22-net-framework-client)
@@ -17,16 +17,19 @@ and .NET Core when porting, and allow easy reconfiguration of the trace sources.
     - [2.3.2. Unit Testing with NUnit 3.x](#232-unit-testing-with-nunit-3x)
 - [3. Known Issues](#3-known-issues)
   - [3.1. Using ILogger with NUnit Tests](#31-using-ilogger-with-nunit-tests)
+- [4. Release History](#4-release-history)
+  - [4.1. Version 0.2.1](#41-version-021)
+  - [4.2. Version 0.2.0](#42-version-020)
 
-## Motivation
+## 1. Motivation
 
-### Intended Use Cases
+### 1.1. Intended Use Cases
 
 The software I develop is primarily console applications, windows forms
 applications, and reusable libraries. This library is intended primarily for
 these scenarios.
 
-### 1. .NET Framework works with .NET Core
+### 1.2. .NET Framework works with .NET Core
 
 This library is intended for usage in your own .NET Framework and .NET Standard
 libraries.
@@ -197,3 +200,17 @@ sometimes occur due to console logging actually being done in another thread,
 and so some console output might actually be captured for a different test case.
 
 See [GitHub Issue #3919](https://github.com/nunit/nunit/issues/3919).
+
+## 4. Release History
+
+### 4.1. Version 0.2.1
+
+Quality:
+
+- Add reference to README.md in NuGet package (DOTNET-810)
+- Trace: Upgrade to .NET Core 6.0 (DOTNET-936, DOTNET-942, DOTNET-945,
+  DOTNET-959)
+
+### 4.2. Version 0.2.0
+
+- Initial Version
