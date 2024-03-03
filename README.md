@@ -210,6 +210,7 @@ Quality:
 - Add reference to README.md in NuGet package (DOTNET-810)
 - Trace: Upgrade to .NET Core 6.0 (DOTNET-936, DOTNET-942, DOTNET-945,
   DOTNET-959)
+- Update to .NET 8.0 (DOTNET-982, DOTNET-983, DOTNET-989, DOTNET-990)
 
 ### 4.2. Version 0.2.0
 

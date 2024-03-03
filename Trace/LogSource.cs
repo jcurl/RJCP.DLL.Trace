@@ -33,7 +33,6 @@ namespace RJCP.Diagnostics.Trace
     /// </remarks>
     public sealed class LogSource : IDisposable
     {
-        private readonly string m_Name;
         private readonly long m_TraceLevels;
         private TraceSource m_TraceSource;
 
@@ -248,7 +247,6 @@ namespace RJCP.Diagnostics.Trace
         /// </remarks>
         public LogSource()
         {
-            m_Name = string.Empty;
             m_TraceSource = new TraceSource("default") {
                 Switch = new SourceSwitch("default") {
                     Level = SourceLevels.Off
@@ -271,7 +269,6 @@ namespace RJCP.Diagnostics.Trace
             ThrowHelper.ThrowIfNullOrEmpty(name);
 
             lock (TraceSourceLock) {
-                m_Name = name;
                 InitLogSource(name);
                 m_TraceLevels = GetTraceLevels(m_TraceSource);
             }
@@ -355,8 +352,8 @@ namespace RJCP.Diagnostics.Trace
         {
             get
             {
-                if (m_TraceSource is not null) return m_TraceSource;
-                throw new ObjectDisposedException(m_Name);
+                ThrowHelper.ThrowIfDisposed(m_TraceSource is null, this);
+                return m_TraceSource;
             }
         }
 
